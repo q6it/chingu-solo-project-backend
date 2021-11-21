@@ -1,0 +1,38 @@
+{
+  "name": "chingu-solo-project-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "@hapi/boom": "^9.1.4",
+    "@hapi/hapi": "^20.2.1",
+    "dotenv": "^10.0.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.3",
+    "esm": "^3.2.25",
+    "hapi-auth-jwt": "^4.0.0",
+    "joi": "^17.4.2",
+    "nodemon": "^2.0.15"
+  },
+  "devDependencies": {
+    "eslint": "^8.2.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.4.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lintfix": "eslint src --fix --cache"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/q6it/chingu-solo-project-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/q6it/chingu-solo-project-backend/issues"
+  },
+  "homepage": "https://github.com/q6it/chingu-solo-project-backend#readme"
+}
