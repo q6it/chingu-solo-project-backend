@@ -24,8 +24,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lintfix": "eslint src --fix --cache",
-    "start": "node server.js"
+    "lintfix": "eslint src --fix --cache"
   },
   "repository": {
     "type": "git",
