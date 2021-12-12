@@ -27,12 +27,13 @@
     "no-restricted-syntax": 0,
     "no-return-await": 0,
     "no-console": 0,
+    "arrow-body-style": 0,
     "prettier/prettier": [
       "error",
       {
         "trailingComma": "es5",
         "singleQuote": true,
-        "printWidth": 80,
+        "printWidth": 100,
         "tabWidth": 4,
         "endOfLine": "lf",
         "arrowParens": "always"
