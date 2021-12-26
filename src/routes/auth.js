@@ -33,18 +33,17 @@ export default [
             ],
         },
         handler: async (request) => {
-            const { email = null, password = null } = request.payload;
+            const { email = null, password = null, name = null } = request.payload;
 
             const passwordHash = await bcrypt.hash(password, 10);
-
             try {
-                users.push({ email, password: passwordHash });
-                const accessToken = generateAccessToken({ email });
+                users.push({ email, password: passwordHash, name });
+                // const accessToken = generateAccessToken({ email });
 
                 return {
                     success: true,
                     message: `${email} user has been registered`,
-                    accessToken,
+                    // accessToken,
                 };
             } catch (error) {
                 console.log(error);
@@ -68,7 +67,6 @@ export default [
                             throw Boom.badRequest('Email or password is missing');
                         }
                         const user = users.filter((u) => u.email === email)[0];
-                        console.log('🚀 ~ file: auth.js ~ line 70 ~ method: ~ user', user);
                         if (!user) {
                             throw Boom.notFound('User not found');
                         }
@@ -77,27 +75,22 @@ export default [
                 },
             ],
         },
-        handler: async (request, h) => {
+        handler: async (request) => {
             // try {
             const { email, password } = request.payload;
 
             const user = users.filter((u) => u.email === email)[0];
+            console.log('🚀 ~ file: auth.js ~ line 83 ~ handler: ~ user', user);
 
             const match = await bcrypt.compare(password, user.password);
-            console.log('🚀 ~ file: auth.js ~ line 86 ~ handler: ~ match', match);
 
             if (match) {
                 const accessToken = generateAccessToken({ email });
                 let refreshToken = generateRefreshToken({ email });
-                console.log('🚀 ~ file: auth.js ~ line 92 ~ handler: ~ refreshToken', refreshToken);
                 const userHasToken = verifyUser(refreshToken);
 
                 if (!userHasToken) {
                     usersTokens.push({ userId: email, refreshToken });
-                    console.log(
-                        '🚀 ~ file: auth.js ~ line 97 ~ handler: ~ usersTokens',
-                        usersTokens
-                    );
                 } else {
                     refreshToken = usersTokens.find((u) => u.userId === email).refreshToken;
                 }
@@ -105,7 +98,7 @@ export default [
                 // const refreshToken = generateRefreshToken({ email });
                 // usersTokens.push(refreshToken);
                 // console.log('🚀 ~ file: auth.js ~ line 17 ~ handler: ~ verified', verified);
-                return { accessToken, refreshToken };
+                return { accessToken, refreshToken, name: user.name, email: user.email };
             }
             throw Boom.unauthorized('invalid password');
             // } catch (error) {
@@ -116,29 +109,29 @@ export default [
     },
 
     // TODO: ditch this request and remove the token on FE
-    {
-        method: 'DELETE',
-        path: `${root}/logout`,
-        // options: {
-        //     auth: 'my_jwt',
-        // }
-        handler: async (request, h) => {
-            const { refreshToken } = request.payload;
-            console.log('🚀 ~ file: auth.js ~ line 121 ~ handler: ~ refreshToken', refreshToken);
-            try {
-                const removeIndex = usersTokens.findIndex((i) => i.refreshToken === refreshToken);
-                console.log('🚀 ~ file: auth.js ~ line 123 ~ handler: ~ usersTokens', usersTokens);
-                if (removeIndex >= 0) {
-                    usersTokens.splice(removeIndex, 1);
-                    return h.response({ success: true }).code(200);
-                }
-                return h.response({ message: 'user not found' }).code(404);
-            } catch (error) {
-                console.log(error);
-                Boom.badRequest('Something went terribly wrong');
-            }
-        },
-    },
+    // {
+    //     method: 'DELETE',
+    //     path: `${root}/logout`,
+    //     // options: {
+    //     //     auth: 'my_jwt',
+    //     // }
+    //     handler: async (request, h) => {
+    //         const { refreshToken } = request.payload;
+    //         console.log('🚀 ~ file: auth.js ~ line 121 ~ handler: ~ refreshToken', refreshToken);
+    //         try {
+    //             const removeIndex = usersTokens.findIndex((i) => i.refreshToken === refreshToken);
+    //             console.log('🚀 ~ file: auth.js ~ line 123 ~ handler: ~ usersTokens', usersTokens);
+    //             if (removeIndex >= 0) {
+    //                 usersTokens.splice(removeIndex, 1);
+    //                 return h.response({ success: true }).code(200);
+    //             }
+    //             return h.response({ message: 'user not found' }).code(404);
+    //         } catch (error) {
+    //             console.log(error);
+    //             Boom.badRequest('Something went terribly wrong');
+    //         }
+    //     },
+    // },
     {
         method: 'POST',
         path: `${root}/refresh-token`,
