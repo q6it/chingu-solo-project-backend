@@ -18,7 +18,7 @@ const init = async () => {
 
     await server.register(Jwt);
     server.auth.strategy('my_jwt', 'jwt', {
-        keys: [process.env.JWTSECRETKEY, process.env.JWTREFRESHTOKEN],
+        keys: process.env.JWTREFRESHTOKEN,
         verify: false,
         validate: (artifacts) => {
             let isValid;
