@@ -5,7 +5,7 @@ export const items = [
         id: 1,
         userId: 'test@test.com',
         title: 'test user post',
-        body: 'unbelievable post about ubmelievable things',
+        body: 'unbelievable post about unbelievable things',
         createdTime: '',
         updatedTime: '',
     },

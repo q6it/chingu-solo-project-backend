@@ -1,9 +1,7 @@
 import Hapi from '@hapi/hapi';
 import Jwt from '@hapi/jwt';
 import routes from './routes';
-import { connectToDb } from '../db/db';
-// import { users } from '../db/dbMock';
-import { verifyAccessToken, verifyRefreshToken } from '../lib/authTokenManager';
+import { verifyRefreshToken } from '../lib/authTokenManager';
 import { verifyUser } from './helpers/users';
 
 const init = async () => {
@@ -22,13 +20,9 @@ const init = async () => {
     server.auth.strategy('my_jwt', 'jwt', {
         keys: [process.env.JWTSECRETKEY, process.env.JWTREFRESHTOKEN],
         verify: false,
-        // validate: false,
-        validate: (artifacts, request, h) => {
+        validate: (artifacts) => {
             let isValid;
             const { token } = artifacts;
-            // const { email } = artifacts.decoded.payload;
-            // const accessTokenVerified = verifyTokenForLogin(token);
-
             const userHasToken = verifyUser(token);
             if (!userHasToken) {
                 return {
@@ -58,7 +52,6 @@ const init = async () => {
 
     await server.start();
     console.log('Server running on %s', server.info.uri);
-    // connectToDb();
 };
 
 process.on('unhandledRejection', (err) => {
