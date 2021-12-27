@@ -23,6 +23,10 @@ It provides an api endpoints to:
 
 -   nodemon start
 
+## Deploy
+
+Choose any deployment service. Currently it's deployed at https://chingu-be.herokuapp.com
+
 ## TODO list
 
 -   Currently it's working with only one token. Ideally for the backend authentication to work more securely there should be an access token and a refresh token
