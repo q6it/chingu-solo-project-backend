@@ -41,7 +41,7 @@ export default [
                 };
             } catch (error) {
                 console.log(error);
-                Boom.badRequest('Something went terribly wrong');
+                throw Boom.badRequest('Something went terribly wrong');
             }
         },
     },
@@ -71,20 +71,24 @@ export default [
 
             const user = users.filter((u) => u.email === email)[0];
             const match = await bcrypt.compare(password, user.password);
+            try {
+                if (match) {
+                    const accessToken = generateAccessToken({ email });
+                    let refreshToken = generateRefreshToken({ email });
+                    const userHasToken = verifyUser(refreshToken);
 
-            if (match) {
-                const accessToken = generateAccessToken({ email });
-                let refreshToken = generateRefreshToken({ email });
-                const userHasToken = verifyUser(refreshToken);
-
-                if (!userHasToken) {
-                    usersTokens.push({ userId: email, refreshToken });
-                } else {
-                    refreshToken = usersTokens.find((u) => u.userId === email).refreshToken;
+                    if (!userHasToken) {
+                        usersTokens.push({ userId: email, refreshToken });
+                    } else {
+                        refreshToken = usersTokens.find((u) => u.userId === email).refreshToken;
+                    }
+                    return { accessToken, refreshToken, name: user.name, email: user.email };
                 }
-                return { accessToken, refreshToken, name: user.name, email: user.email };
+                throw Boom.unauthorized('invalid password');
+            } catch (error) {
+                console.log(error);
+                throw Boom.badRequest('Something went terribly wrong');
             }
-            throw Boom.unauthorized('invalid password');
         },
     },
     {
@@ -100,7 +104,7 @@ export default [
                 // }
                 return { refreshToken };
             } catch (error) {
-                Boom.badRequest('Something went terribly wrong');
+                throw Boom.badRequest('Something went terribly wrong');
             }
         },
     },
