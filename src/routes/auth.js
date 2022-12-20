@@ -98,10 +98,7 @@ export default [
             try {
                 const { email } = request.payload;
                 const refreshToken = generateRefreshToken({ email });
-                // const userHasToken = findUserToken(refreshToken);
-                // if (!userHasToken) {
-                //     usersTokens.push(refreshToken);
-                // }
+
                 return { refreshToken };
             } catch (error) {
                 throw Boom.badRequest('Something went terribly wrong');
